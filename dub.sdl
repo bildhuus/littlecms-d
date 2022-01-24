@@ -1,0 +1,9 @@
+name "littlecms-d"
+description "D bindings and pre-compiled libraries for the little CMS color management system"
+
+license "MIT"
+copyright "Copyright (c) 1998-2020 Marti Maria Saguer, 2022 Sönke Ludwig"
+
+targetType "sourceLibrary"
+
+sourceFiles "lib/windows-x86_64/lcms2_static.lib" platform="windows-x86_64"
