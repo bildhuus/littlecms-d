@@ -1,0 +1,37 @@
+stages:
+  - test
+
+test:windows-ldc-x86_64:
+  stage: test
+  tags: [windows, x86_64]
+  script: dub -a x86_64 --compiler ldc2 --single test.d
+
+test:windows-ldc-x86:
+  stage: test
+  tags: [windows, x86]
+  script: dub -a x86 --compiler ldc2 --single test.d
+
+test:ubuntu-ldc-x86_64:
+  stage: test
+  tags: [ubuntu, x86_64]
+  script: dub -a x86_64 --compiler ldc2 --single test.d
+
+test:osx-x86_64:
+  stage: test
+  tags: [osx, x86_64]
+  script: dub -a x86_64-apple-macosx10.12 --compiler ldc2 --single test.d
+
+test:osx-arm64:
+  stage: test
+  tags: [osx, arm64]
+  script: dub build -a arm64-apple-macosx12.0 --compiler ldc2 --single test.d
+
+test:ios-arm64:
+  stage: test
+  tags: [osx, arm64]
+  script: dub build -a arm64-apple-ios16.0 --compiler ldc2 --single test.d
+
+test:ios_simulator-x86_64:
+  stage: test
+  tags: [osx, arm64]
+  script: dub build -a x86_64-apple-ios16.0-simulator --compiler ldc2 --single test.d
