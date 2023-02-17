@@ -31,7 +31,7 @@ extern (C) nothrow:
 //
 //---------------------------------------------------------------------------------
 //
-// Version 2.13rc1
+// Version 2.14
 //
 
 // ********** Configuration toggles ****************************************
@@ -157,6 +157,7 @@ alias cmsBool = int;
 enum cmsTagTypeSignature
 {
     cmsSigChromaticityType = 0x6368726D, // 'chrm'
+    cmsSigcicpType = 0x63696370,  // 'cicp' 
     cmsSigColorantOrderType = 0x636C726F, // 'clro'
     cmsSigColorantTableType = 0x636C7274, // 'clrt'
     cmsSigCrdInfoType = 0x63726469, // 'crdi'
@@ -267,6 +268,7 @@ enum cmsTagSignature
     cmsSigViewingConditionsTag = 0x76696577, // 'view'
     cmsSigVcgtTag = 0x76636774, // 'vcgt'
     cmsSigMetaTag = 0x6D657461, // 'meta'
+    cmsSigcicpTag = 0x63696370,  // 'cicp'
     cmsSigArgyllArtsTag = 0x61727473 // 'arts'
 }
 
@@ -641,6 +643,14 @@ struct cmsICCViewingConditions
     cmsCIEXYZ SurroundXYZ; // This is for storing the tag
     cmsUInt32Number IlluminantType; // viewing condition
 }
+
+struct cmsVideoSignalType {
+    cmsUInt8Number ColourPrimaries;            // Recommendation ITU-T H.273
+    cmsUInt8Number TransferCharacteristics;    //  (ISO/IEC 23091-2)
+    cmsUInt8Number MatrixCoefficients;
+    cmsUInt8Number VideoFullRangeFlag;
+}
+
 
 // Get LittleCMS version (for shared objects) -----------------------------------------------------------------------------
 
@@ -1110,7 +1120,11 @@ cmsBool cmsIsCLUT (cmsHPROFILE hProfile, cmsUInt32Number Intent, cmsUInt32Number
 cmsColorSpaceSignature _cmsICCcolorSpace (int OurNotation);
 int _cmsLCMScolorSpace (cmsColorSpaceSignature ProfileSpace);
 
+deprecated("Use cmsChannelsOfColorSpace instead")
 cmsUInt32Number cmsChannelsOf (cmsColorSpaceSignature ColorSpace);
+
+// Get number of channels of color space or -1 if color space is not listed/supported
+cmsInt32Number cmsChannelsOfColorSpace(cmsColorSpaceSignature ColorSpace);
 
 // Build a suitable formatter for the colorspace of this profile. nBytes=1 means 8 bits, nBytes=2 means 16 bits. 
 cmsUInt32Number cmsFormatterForColorspaceOfProfile (cmsHPROFILE hProfile, cmsUInt32Number nBytes, cmsBool lIsFloat);
@@ -1547,7 +1561,7 @@ cmsBool cmsDesaturateLab (
     double amin,
     double bmax,
     double bmin);
-enum LCMS_VERSION = 2130;
+enum LCMS_VERSION = 2150;
 enum cmsMAX_PATH = 256;
 enum FALSE = 0;
 enum TRUE = 1;

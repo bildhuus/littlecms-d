@@ -191,6 +191,7 @@ enum cmsPluginMultiProcessElementSig = 0x6D706548; // 'mpeH'
 enum cmsPluginOptimizationSig = 0x6F707448; // 'optH'
 enum cmsPluginTransformSig = 0x7A666D48; // 'xfmH'
 enum cmsPluginMutexSig = 0x6D747A48; // 'mtxH'
+enum cmsPluginParalellizationSig = 0x70726C48; // 'prlH
 
 struct _cmsPluginBaseStruct
 {
@@ -600,7 +601,7 @@ alias _cmsTransformFn = void function (
     const(void)* InputBuffer,
     void* OutputBuffer,
     cmsUInt32Number Size,
-    cmsUInt32Number Stride); // Stride in bytes to the next plana in planar formats
+    cmsUInt32Number Stride); // Stride in bytes to the next plane in planar formats
 
 alias _cmsTransform2Fn = void function (
     _cmstransform_struct* CMMcargo,
@@ -676,3 +677,20 @@ void _cmsDestroyMutex (cmsContext ContextID, void* mtx);
 cmsBool _cmsLockMutex (cmsContext ContextID, void* mtx);
 void _cmsUnlockMutex (cmsContext ContextID, void* mtx);
 
+//----------------------------------------------------------------------------------------------------------
+// Parallelization 
+
+_cmsTransform2Fn _cmsGetTransformWorker(_cmstransform_struct* CMMcargo);
+cmsInt32Number   _cmsGetTransformMaxWorkers(_cmstransform_struct* CMMcargo);
+cmsUInt32Number  _cmsGetTransformWorkerFlags(_cmstransform_struct* CMMcargo);
+
+// Let's plug-in to guess the best number of workers
+enum CMS_GUESS_MAX_WORKERS = -1;
+
+struct cmsPluginParalellization {
+    cmsPluginBase       base;
+
+    cmsInt32Number      MaxWorkers;       // Number of starts to do as maximum
+    cmsUInt32Number     WorkerFlags;      // Reserved
+    _cmsTransform2Fn    SchedulerFn;      // callback to setup functions     
+}
