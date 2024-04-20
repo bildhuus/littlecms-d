@@ -86,3 +86,16 @@ jobs:
       - name: Test
         shell: bash
         run: dub build -a x86_64-apple-ios16.0-simulator --compiler ldc2 --single test.d
+
+  android-arm64:
+    runs-on: [ubuntu, android-cross]
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+        with:
+          submodules: true
+      - name: Test
+        shell: bash
+        run: |
+          source ~/android-ndk-envvars
+          dub build -a aarch64-linux-android --compiler ldc2 --single test.d
