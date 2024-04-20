@@ -1,0 +1,88 @@
+name: Test
+
+# Only triggers on pushes/PRs to master
+on:
+  pull_request:
+    branches:
+      - master
+  push:
+    branches:
+      - master
+
+jobs:
+  windows-x86_64:
+    runs-on: [windows, x86_64]
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+        with:
+          submodules: true
+      - name: Test
+        shell: bash
+        run: dub -a x86_64 --compiler ldc2 --single test.d
+
+  windows-x86:
+    runs-on: [windows, x86]
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+        with:
+          submodules: true
+      - name: Test
+        shell: bash
+        run: dub -a x86 --compiler ldc2 --single test.d
+
+  ubuntu-x86_64:
+    runs-on: [ubuntu-baseline, x86_64]
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+        with:
+          submodules: true
+      - name: Test
+        shell: bash
+        run: dub -a x86_64 --compiler ldc2 --single test.d
+
+  macos-x86_64:
+    runs-on: [macos]
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+        with:
+          submodules: true
+      - name: Test
+        shell: bash
+        run: dub -a x86_64-apple-macosx10.12 --compiler ldc2 --single test.d
+
+  macos-arm64:
+    runs-on: [macos]
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+        with:
+          submodules: true
+      - name: Test
+        shell: bash
+        run: dub build -a arm64-apple-macosx12.0 --compiler ldc2 --single test.d
+
+  ios-arm64:
+    runs-on: [macos]
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+        with:
+          submodules: true
+      - name: Test
+        shell: bash
+        run: dub build -a arm64-apple-ios16.0 --compiler ldc2 --single test.d
+
+  ios-simulator-x86_64:
+    runs-on: [macos]
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+        with:
+          submodules: true
+      - name: Test
+        shell: bash
+        run: dub build -a x86_64-apple-ios16.0-simulator --compiler ldc2 --single test.d
